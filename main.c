@@ -28,5 +28,19 @@ int main( int argc, char *argv[]) {
   ret = iotputi("conf/save", 1);
   ret = iotgets("conf/wifi/list/3/pass", pass);
   printf("conf/wifi/list/3/pass:%s\n", pass);
+  /* iotfindi() */
+  int num = iotfindi("host/media/dsk");
+  printf("host/media/dsk:%d\n", num);
+  /* iotfinds() */
+  char** str = malloc(sizeof(char*) * num);
+  for(int i = 0; i < num; i++) {
+    str[i] = malloc(sizeof(char) * 32);
+  }
+  ret = iotfinds("host/media/dsk", str, num);
+  for(int i = 0; i < num; i++) {
+    printf("%s\n", str[i]);
+    free(str[i]);
+  }
+  free(str);
   return 0;
 }

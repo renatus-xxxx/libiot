@@ -1,1 +1,1 @@
-zcc +msx -create-app -subtype=msxdos main.c libiot.c -bn IOTSAMP.COM
+zcc +msx -create-app -DAMALLOC -subtype=msxdos main.c libiot.c -bn IOTSAMP.COM

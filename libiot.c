@@ -101,3 +101,54 @@ int iotputs(const char* device_path, char* value) {
   outp(IOT_PORT, 0x00);
   r = inp(IOT_PORT);
 }
+
+int iotfindi(const char* device_path) {
+  outp(IOT_PORT, 0xE0);
+  outp(IOT_PORT, 0x01);
+  outp(IOT_PORT, 0x53);
+  outp(IOT_PORT, 0xC0);
+  int l = strlen(device_path);
+  outp(IOT_PORT, l);
+  for(int i = 0; i < l; i++) {
+    outp(IOT_PORT, *device_path);
+    device_path++;
+  }
+  outp(IOT_PORT, 0x00);
+  unsigned char r[2];
+  r[0] = inp(IOT_PORT);
+  outp(IOT_PORT, 0xE0);
+  outp(IOT_PORT, 0x01);
+  outp(IOT_PORT, 0x11);
+  outp(IOT_PORT, 0x80);
+  r[0] = inp(IOT_PORT);
+  r[0] = inp(IOT_PORT);
+  r[1] = inp(IOT_PORT);
+  return *((int*)r);
+}
+
+int iotfinds(const char* device_path, char** result, int num) {
+  outp(IOT_PORT, 0xE0);
+  outp(IOT_PORT, 0x01);
+  outp(IOT_PORT, 0x53);
+  outp(IOT_PORT, 0xC0);
+  int l = strlen(device_path);
+  outp(IOT_PORT, l);
+  for(int i = 0; i < l; i++) {
+    outp(IOT_PORT, *device_path);
+    device_path++;
+  }
+  outp(IOT_PORT, 0x00);
+  int ret = inp(IOT_PORT);
+  outp(IOT_PORT, 0xE0);
+  outp(IOT_PORT, 0x01);
+  outp(IOT_PORT, 0x13);
+  outp(IOT_PORT, 0x80);
+  for(int i = 0; i < num; i++) {
+    l = inp(IOT_PORT);
+    for(int j = 0; j < l; j++) {
+      result[i][j] = inp(IOT_PORT);
+    }
+    result[i][l] = 0;
+  }
+  return 0;
+}
