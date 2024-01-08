@@ -11,8 +11,7 @@ int iotgeti(const char* device_path) {
   int l = strlen(device_path);
   outp(IOT_PORT, l);
   for(int i = 0; i < l; i++) {
-    outp(IOT_PORT, *device_path);
-    device_path++;
+    outp(IOT_PORT, device_path[i]);
   }
   outp(IOT_PORT, 0x00);
   unsigned char r[2];
@@ -35,8 +34,7 @@ int iotgets(const char* device_path, char* result) {
   int l = strlen(device_path);
   outp(IOT_PORT, l);
   for(int i = 0; i < l; i++) {
-    outp(IOT_PORT, *device_path);
-    device_path++;
+    outp(IOT_PORT, device_path[i]);
   }
   outp(IOT_PORT, 0x00);
   result[0] = inp(IOT_PORT);
@@ -49,7 +47,7 @@ int iotgets(const char* device_path, char* result) {
     result[i] = inp(IOT_PORT);
   }
   result[l] = 0; // add null terminator
-  return 0;
+  return l;
 }
 
 int iotputi(const char* device_path, int value) {
